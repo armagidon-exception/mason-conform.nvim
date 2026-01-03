@@ -1,0 +1,3 @@
+---@class (exact) mason-conform.setupOpts
+---@field ignore_install string[]? List of ignored formatters.
+---@field auto_enable boolean? Whether to automatically discover and enable installed formatters.

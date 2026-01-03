@@ -7,6 +7,9 @@ local function auto_install()
 
     local formatters_to_install = {}
     for _, formatters in pairs(formatters_by_ft) do
+        if type(formatters) == 'function'  then
+            formatters = formatters(vim.api.nvim_get_current_buf())
+        end
         for _, formatter in pairs(formatters) do
             -- Support case where the user has defined multiple formatters
             -- for said filetype. E.g javascript = { { "prettierd", "prettier" } }
