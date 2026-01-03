@@ -10,9 +10,6 @@ local function auto_discover()
 	local formatters = require("conform.formatters").list_all_formatters()
 
 	for formatter, _ in pairs(formatters) do
-		if formatters_by_ft[formatter] then
-			goto continue
-		end
 		local mason_pkg_name = mappings.conform_to_package[formatter]
 		if not mason_pkg_name then
 			goto continue
@@ -26,21 +23,26 @@ local function auto_discover()
 		local languages = mason_pkg.spec.languages
 
 		for _, lang in ipairs(languages) do
+            lang = string.lower(lang)
 			if mappings.language_to_ft[lang] then
 				for _, ft in ipairs(mappings.language_to_ft[lang]) do
-					output[ft] = output[ft] or {}
-					table.insert(output[ft], formatter)
+					if not formatters_by_ft[ft] then
+						output[ft] = output[ft] or {}
+						table.insert(output[ft], formatter)
 
-					if Config.config.auto_enable.enabled and Config.config.auto_enable.notify then
-						vim.notify("Discovered " .. formatter .. " for " .. ft)
+						if Config.config.auto_enable.enabled and Config.config.auto_enable.notify then
+							vim.notify("Discovered " .. formatter .. " for " .. ft)
+						end
 					end
 				end
 			else
-				output[lang] = output[lang] or {}
-				table.insert(output[lang], formatter)
+				if not formatters_by_ft[lang] then
+					output[lang] = output[lang] or {}
+					table.insert(output[lang], formatter)
 
-				if Config.config.auto_enable.enabled and Config.config.auto_enable.notify then
-					vim.notify("Discovered " .. formatter .. " for " .. lang)
+					if Config.config.auto_enable.enabled and Config.config.auto_enable.notify then
+						vim.notify("Discovered " .. formatter .. " for " .. lang)
+					end
 				end
 			end
 		end
