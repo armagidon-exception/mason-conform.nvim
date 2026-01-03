@@ -1,8 +1,8 @@
 local registry = require("mason-registry")
 local mapping = require("mason-conform.mapping")
+local Config = require'mason-conform.config'
 
 local function auto_install()
-    local config = require("mason-conform").config
     local formatters_by_ft = require("conform").formatters_by_ft;
 
     local formatters_to_install = {}
@@ -24,7 +24,7 @@ local function auto_install()
     end
 
     -- Filter out formatters that the user wants to ignore
-    for _, formatter_to_ignore in pairs(config.ignore_install) do
+    for _, formatter_to_ignore in pairs(Config.config.ignore_install) do
         formatters_to_install[formatter_to_ignore] = nil
     end
 

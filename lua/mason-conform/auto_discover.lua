@@ -1,5 +1,6 @@
 local registry = require "mason-registry"
 local mappings = require "mason-conform.mapping"
+local Config = require "mason-conform.config"
 
 ---@return table<string, string[]>
 local function auto_discover()
@@ -29,10 +30,18 @@ local function auto_discover()
 				for _, ft in ipairs(mappings.language_to_ft[lang]) do
 					output[ft] = output[ft] or {}
 					table.insert(output[ft], formatter)
+
+					if Config.config.auto_enable.enabled and Config.config.auto_enable.notify then
+						vim.notify("Discovered " .. formatter .. " for " .. ft)
+					end
 				end
 			else
 				output[lang] = output[lang] or {}
 				table.insert(output[lang], formatter)
+
+				if Config.config.auto_enable.enabled and Config.config.auto_enable.notify then
+					vim.notify("Discovered " .. formatter .. " for " .. lang)
+				end
 			end
 		end
 
@@ -43,6 +52,8 @@ local function auto_discover()
 end
 
 return function()
-	local discovered = auto_discover()
-	require("conform").setup { formatters_by_ft = discovered }
+	if Config.config.auto_enable.enabled then
+		local discovered = auto_discover()
+		require("conform").setup { formatters_by_ft = discovered }
+	end
 end
