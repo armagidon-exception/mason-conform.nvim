@@ -5,7 +5,7 @@ Config.default_config = {
 	ignore_install = {},
 	auto_enable = {
 		enabled = true,
-		notify = true,
+		notify = false,
 	},
 }
 
