@@ -55,7 +55,9 @@ end
 
 return function()
 	if Config.config.auto_enable.enabled then
-		local discovered = auto_discover()
-		require("conform").setup { formatters_by_ft = discovered }
+		local conform = require("conform")
+		for ft, fmts in pairs(auto_discover()) do
+			conform.formatters_by_ft[ft] = fmts
+		end
 	end
 end
